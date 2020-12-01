@@ -1,58 +1,51 @@
 import React, { Component } from 'react';
-import Header from './components/Header'
+import axios from 'axios';
+import Simp from './components/Simp'
 
-class App extends Component {
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      image: '',
+      quote:'',
+      name:''
+    };
+   
 
-  state = {
-    text: 'marc',
-    dogOwner: true,
-    counter: 0,
-    people: ['Marc', 'Luke', 'kabhsdn']
+   
   }
 
-  increase = () => {
-    this.setState({
-      counter: this.state.counter + 1
-    })
+  
+
+  
+  getdata=()=> {
+
+    axios.get('https://simpsons-quotes-api.herokuapp.com/quotes')
+      .then(response => (response.data))
+      .then(dataFromApi => {  
+  this.setState({
+          image: dataFromApi[0].image,
+          quote:dataFromApi[0].quote,
+          name: dataFromApi[0].character
+        })
+     
+      })
   }
 
-  decrease = () => {
-    this.setState({
-      counter: this.state.counter - 1
-    })
-  }
-
-  sayHello = greetings => {
-    alert(greetings + this.state.text)
-  }
 
   render() {
     return (
-      <div>
-        <Header counterValue={this.state.counter} text={this.state.text} />
-        {
-          this.state.text === 'marc'
-            ? <h3>Hey Marc how are you?</h3>
-            : <h3>Who are you???</h3>
-        }
-        {
-          this.state.dogOwner && <h3>I love dogs!</h3>
-        }
-        <ul>
-          {
-            this.state.people.map((person, i) => <li key={i}>Hey you {person}</li>)
-          }
-        </ul>
-        <h1>Counter value in APP.js: {this.state.counter}</h1>
-        <div>
-          <button onClick={this.increase}>+</button>
-          <button onClick={this.decrease}>-</button>
-        </div>
-        <div>
-          <button onClick={() => this.sayHello('good morning ')}>Say Hello!</button>
-        </div>
+      <div className="App">
+        <Simp
+        name={this.state.name}
+        image={this.state.image}
+        quote={this.state.quote}
+        />
+        
+        <button type='button' onClick={this.getdata}>get data</button>
+    
       </div>
-    )
+    );
   }
 }
 
